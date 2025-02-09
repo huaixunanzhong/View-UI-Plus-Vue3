@@ -1,18 +1,20 @@
 <script lang="ts" setup>
 import { useLink } from './useLink'
 
-interface Props {
-  to: [object, string]
-  disabled: boolean
-  linkColor: boolean
-  target: string
-}
+defineOptions({ name: 'ILink' })
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   linkColor: false,
-  target: '_self',
+  target: '_self'
 })
+
+interface Props {
+  to: object | string
+  disabled?: boolean
+  linkColor?: boolean
+  target?: string
+}
 
 const { linkUrl, target, handleCheckClick } = useLink(toRefs(props))
 

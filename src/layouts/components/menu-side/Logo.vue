@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import ILink from '@/components/link/index.vue'
+
 interface Props {
   hideLogo: boolean
   menuCollapse: boolean
@@ -8,19 +10,24 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   hideLogo: false,
   menuCollapse: false,
-  siderTheme: 'dark',
+  siderTheme: 'dark'
 })
 </script>
 
 <template>
-  <i-link v-show="!props.hideLogo" to="/">
-    <img v-if="props.menuCollapse" src="@/assets/images/logo-small.png" />
+  <ILink v-show="!props.hideLogo" :disabled="true" :link-color="false" to="/">
+    <img
+      v-if="props.menuCollapse"
+      alt=""
+      src="@/assets/images/logo-small.png"
+    />
     <img
       v-else-if="props.siderTheme === 'light'"
+      alt=""
       src="@/assets/images/logo.png"
     />
-    <img v-else src="@/assets/images/logo-dark.png" />
-  </i-link>
+    <img v-else alt="" src="@/assets/images/logo-dark.png" />
+  </ILink>
 </template>
 
 <style scoped></style>

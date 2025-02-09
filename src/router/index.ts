@@ -1,57 +1,65 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import routes from './routes'
-// import util from '@/libs/util'
-// import {
-//   useAccountStore,
-//   useLayoutStore,
-//   useMenuStore,
-//   usePageStore,
-//   useUserStore,
-// } from '@/store/index'
 // import { cancelAllRequest } from '@/plugins/request/index'
 // import ViewUIPlus from 'view-ui-plus'
-
 // import {
 //   getHeaderName,
 //   getMenuSider,
 //   getSiderSubmenu,
 //   includeArray,
 // } from '@/libs/system'
-
-// import menuSider from '@/menu/sider'
+import menuSider from '@/menu/sider'
+import Setting from '@/setting'
+import { useMenuStore } from '@/store'
+import { getHeaderName, getMenuSider, getSiderSubmenu } from '@/utils/menu'
+import { createRouter, createWebHistory } from 'vue-router'
+import routes from './routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
+  routes
 })
 
 router.beforeEach(async (to, from, next) => {
+  // // const userStore = useUserStore()
+  // // const accountStore = useAccountStore()
+  const menuStore = useMenuStore()
+  // // const layoutStore = useLayoutStore()
+  let path = to.matched[to.matched.length - 1].path
+  if (!Setting.dynamicSiderMenu) {
+    let headerName = getHeaderName(path, menuSider)
+    if (headerName === null) {
+      path = to.path
+      headerName = getHeaderName(path, menuSider)
+    }
+    // 在 404 时，是没有 headerName 的
+    if (headerName !== null) {
+      menuStore.setHeaderName(headerName)
+      menuStore.setMenuSider(menuSider)
+
+      const filterMenuSider = getMenuSider(menuSider, headerName)
+      menuStore.setSider(filterMenuSider)
+      menuStore.setActivePath(to.path)
+
+      const openNames = getSiderSubmenu(path, menuSider)
+      menuStore.setOpenNames(openNames)
+    }
+  }
+
   //
   next()
   //
-  // // const userStore = useUserStore()
-  // // const accountStore = useAccountStore()
-  // // const menuStore = useMenuStore()
-  // // const layoutStore = useLayoutStore()
-  // let path = to.matched[to.matched.length - 1].path
+  // this.appRouteChange(to, from)
   // if (!Setting.dynamicSiderMenu) {
-  //   let headerName = getHeaderName(path, menuSider)
-  //
-  //   if (headerName === null) {
-  //     path = to.path
-  //     headerName = getHeaderName(path, menuSider)
-  //   }
-  //   if (headerName !== null) {
-  //     menuStore.setHeaderName(headerName)
-  //     menuStore.setMenuSider(menuSider)
-  //
-  //     const filterMenuSider = getMenuSider(menuSider, headerName)
-  //     menuStore.setSider(filterMenuSider)
-  //     menuStore.setActivePath(to.path)
-  //
-  //     const openNames = getSiderSubmenu(path, menuSider)
-  //     menuStore.setOpenNames(openNames)
-  //   }
+  //   // if (headerName !== null) {
+  //   //   menuStore.setHeaderName(headerName)
+  //   //   menuStore.setMenuSider(menuSider)
+  //   //
+  //   //   const filterMenuSider = getMenuSider(menuSider, headerName)
+  //   //   menuStore.setSider(filterMenuSider)
+  //   //   menuStore.setActivePath(to.path)
+  //   //
+  //   //   const openNames = getSiderSubmenu(path, menuSider)
+  //   //   menuStore.setOpenNames(openNames)
+  //   // }
   // }
   // // Cancel all pending requests
   // await cancelAllRequest()

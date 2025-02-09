@@ -1,7 +1,7 @@
 const BasicLayout = () => import('@/layouts/index.vue')
 
 const meta = {
-  auth: true,
+  auth: true
 }
 
 const pre = 'dashboard-'
@@ -17,9 +17,9 @@ export default {
       meta: {
         ...meta,
         title: '$t:menu.dashboard',
-        closable: true,
+        closable: true
       },
-      component: () => import('@/pages/dashboard/console/index.vue'),
-    },
-  ],
+      component: () => import('@/pages/dashboard/console/index.vue')
+    }
+  ]
 }

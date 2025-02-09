@@ -1,3 +1,4 @@
+import type { RouteRecordRaw } from 'vue-router'
 import dashboard from './modules/dashboard'
 
 const BasicLayout = () => import('@/layouts/index.vue')
@@ -9,7 +10,7 @@ const frameIn = [
   {
     path: '/',
     redirect: {
-      name: 'dashboard-console',
+      name: 'dashboard-console'
     },
     component: BasicLayout,
     children: [
@@ -22,8 +23,8 @@ const frameIn = [
           beforeRouteEnter(to, from, next) {
             next((instance) => instance.$router.replace(from.fullPath))
           },
-          render: (h) => h(),
-        },
+          render: (h) => h()
+        }
       },
       // 页面重定向 必须保留
       {
@@ -33,15 +34,15 @@ const frameIn = [
         component: {
           beforeRouteEnter(to, from, next) {
             next((instance) =>
-              instance.$router.replace(JSON.parse(from.params.route)),
+              instance.$router.replace(JSON.parse(from.params.route))
             )
           },
-          render: (h) => h(),
-        },
-      },
-    ],
+          render: (h) => h()
+        }
+      }
+    ]
   },
-  dashboard,
+  dashboard
 ]
 
 /**
@@ -133,5 +134,6 @@ const errorPage = [
 // 导出需要显示菜单的
 export const frameInRoutes = frameIn
 
+const routes: RouteRecordRaw[] = [...frameIn, ...frameOut, ...errorPage]
 // 重新组织后导出
-export default [...frameIn, ...frameOut, ...errorPage]
+export default routes
